@@ -1,12 +1,25 @@
 import gulp from 'gulp';
-import sass from 'gulp-sass';
-import * as sassCompiler from 'sass'; // Mudando a importação
+import gulpSass from 'gulp-sass';
+import imagemin from 'gulp-imagemin'; // Importe o gulp-imagemin
+import sassCompiler from 'sass'; // Use sassCompiler corretamente
 
+const sass = gulpSass(sassCompiler); // Configure o compilador Sass
+
+// Tarefa de compilação do Sass
 const sassTask = () => {
     return gulp.src('src/scss/**/*.scss')
-        .pipe(sass(sassCompiler).on('error', sass.logError)) // Mantendo a mesma estrutura
+        .pipe(sass().on('error', sass.logError))
         .pipe(gulp.dest('dist/css'));
 };
 
-// Defina as tarefas padrão e outras aqui, se necessário
-export default gulp.series(sassTask);
+// Tarefa de otimização de imagens
+const imageMinTask = () => {
+    return gulp.src('src/images/*')
+        .pipe(imagemin())
+        .pipe(gulp.dest('dist/images'));
+};
+
+// Definindo a tarefa padrão que roda o Sass e o imagemin
+const defaultTask = gulp.series(sassTask, imageMinTask);
+
+export default defaultTask;
