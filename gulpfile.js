@@ -1,17 +1,12 @@
-const gulp = require('gulp');
-const sass = require('gulp-sass')(require('sass'));
+import gulp from 'gulp';
+import sass from 'gulp-sass';
+import * as sassCompiler from 'sass'; // Mudando a importação
 
-// Tarefa para compilar Sass
-gulp.task('sass', function() {
-    return gulp.src('src/scss/**/*.scss') // Caminho para seus arquivos .scss
-        .pipe(sass().on('error', sass.logError))
-        .pipe(gulp.dest('dist/css')); // Caminho para onde o CSS compilado será salvo
-});
+const sassTask = () => {
+    return gulp.src('src/scss/**/*.scss')
+        .pipe(sass(sassCompiler).on('error', sass.logError)) // Mantendo a mesma estrutura
+        .pipe(gulp.dest('dist/css'));
+};
 
-// Tarefa para observar mudanças nos arquivos Sass
-gulp.task('watch', function() {
-    gulp.watch('src/scss/**/*.scss', gulp.series('sass')); // Observa as mudanças nos arquivos .scss
-});
-
-// Tarefa padrão
-gulp.task('default', gulp.series('sass', 'watch'));
+// Defina as tarefas padrão e outras aqui, se necessário
+export default gulp.series(sassTask);
